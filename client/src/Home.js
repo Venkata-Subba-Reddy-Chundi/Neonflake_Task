@@ -9,7 +9,8 @@ function App() {
   const [image, setImage] = useState("")
   const [videoFile,setVideoFile]=useState("")
   const [video,setVideo]= useState("")
-  const [showButton, setShowButton] = useState(false);
+  const [showImgButton, setShowImgButton] = useState(false);
+  const [showVidButton, setShowVidButton] = useState(false);
   const nav=useNavigate()
 
   const changeHandle = async (e) => {
@@ -33,11 +34,11 @@ function App() {
       setImage(reader.result)
     }
     // console.log(image)
-    setShowButton(true)
+    setShowImgButton(true)
   }
 
   const ImgConvert = async () => {
-    const result = await axios.post("http://localhost:8001/addimage", {
+    const result = await axios.post("https://neonflake-74ej.onrender.com/addimage", {
       imagedata: image
     })
     try {
@@ -46,8 +47,9 @@ function App() {
       // console.log(uploadedImage)
       setBlogs({...blogs,myFile: uploadedImage})
       console.log("Image Uploaded")
+      
     } catch (err) { console.log(err) }
-
+    setShowImgButton(false)
   }
 
   const handleVidChange = (e) => {
@@ -64,10 +66,10 @@ function App() {
       setVideo(reader.result)
     }
     // console.log(image)
-    setShowButton(true)
+    setShowVidButton(true)
   }
   const VidConvert = async () => {
-    const result = await axios.post("http://localhost:8001/addvideo", {
+    const result = await axios.post("https://neonflake-74ej.onrender.com/addvideo", {
       videodata:video
     })
     try {
@@ -76,14 +78,15 @@ function App() {
       console.log(uploadedVideo)
       setBlogs({...blogs,myVideoFile: uploadedVideo})
       console.log("Video Uploaded")
+      
     } catch (err) { console.log(err) }
-
+    setShowVidButton(false)
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     console.log(blogs)
-    await axios.post(`http://localhost:8001/createBlog`, blogs)
+    await axios.post(`https://neonflake-74ej.onrender.com/createBlog`, blogs)
       .then((response) => {
         console.log(response)
         nav('/blogs')
@@ -107,12 +110,12 @@ function App() {
         <label htmlFor="imgInput">Upload a Photo </label>
         <input type='file' onChange={handleImgChange} required name='myFile' id='imgInput'
           accept='image/jpg, image/jpeg, image/png' /><br/><br />
-        {showButton && <button onClick={ImgConvert}>Confirm</button>}  <br /><br />
+        {showImgButton && <button onClick={ImgConvert}>Confirm image upload </button>}  <br /><br />
 
         <label htmlFor="imgInput">Upload a Video </label>
         <input type='file' onChange={handleVidChange} required name='myFile' id='imgInput'
            accept="video/mp4, video/webm, video/ogg" /><br /><br />
-        {showButton && <button onClick={VidConvert}>Confirm</button>}  <br /><br />
+        {showVidButton && <button onClick={VidConvert}>Confirm image upload</button>}  <br /><br />
 
         <button onClick={handleSubmit}>Submit</button><br />
       </form>
